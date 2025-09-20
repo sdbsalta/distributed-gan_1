@@ -1,0 +1,26 @@
+TimeSeries ID,total direction=Write,total direction=Read
+direction,Write,Read
+Wed May 22 2024 14:15:00 GMT+0200 (Central European Summer Time),2.6666666666666665,0.05
+Wed May 22 2024 14:16:00 GMT+0200 (Central European Summer Time),4.083333333333333,0.3333333333333333
+Wed May 22 2024 14:17:00 GMT+0200 (Central European Summer Time),3.65,22.95
+Wed May 22 2024 14:18:00 GMT+0200 (Central European Summer Time),7.033333333333333,113.13333333333333
+Wed May 22 2024 14:19:00 GMT+0200 (Central European Summer Time),9.85,33.9
+Wed May 22 2024 14:20:00 GMT+0200 (Central European Summer Time),26.516666666666666,70.5
+Wed May 22 2024 14:21:00 GMT+0200 (Central European Summer Time),274.45,122.75
+Wed May 22 2024 14:22:00 GMT+0200 (Central European Summer Time),345.5,20.53333333333333
+Wed May 22 2024 14:23:00 GMT+0200 (Central European Summer Time),108.13333333333333,8.75
+Wed May 22 2024 14:24:00 GMT+0200 (Central European Summer Time),13.616666666666667,1.65
+Wed May 22 2024 14:25:00 GMT+0200 (Central European Summer Time),4.016666666666667,0.016666666666666666
+Wed May 22 2024 14:26:00 GMT+0200 (Central European Summer Time),3.8,0.9166666666666666
+Wed May 22 2024 14:27:00 GMT+0200 (Central European Summer Time),3.5833333333333335,0.16666666666666666
+Wed May 22 2024 14:28:00 GMT+0200 (Central European Summer Time),4.766666666666667,0
+Wed May 22 2024 14:29:00 GMT+0200 (Central European Summer Time),4.316666666666666,0
+Wed May 22 2024 14:30:00 GMT+0200 (Central European Summer Time),3.7333333333333334,0.016666666666666666
+Wed May 22 2024 14:31:00 GMT+0200 (Central European Summer Time),5.15,0
+Wed May 22 2024 14:32:00 GMT+0200 (Central European Summer Time),3.55,0
+Wed May 22 2024 14:33:00 GMT+0200 (Central European Summer Time),3.4166666666666665,0
+Wed May 22 2024 14:34:00 GMT+0200 (Central European Summer Time),4.8,0
+Wed May 22 2024 14:35:00 GMT+0200 (Central European Summer Time),4.666666666666666,0.13333333333333333
+Wed May 22 2024 14:36:00 GMT+0200 (Central European Summer Time),5.233333333333333,0.05
+Wed May 22 2024 14:37:00 GMT+0200 (Central European Summer Time),2.8666666666666667,0.016666666666666666
+Wed May 22 2024 14:38:00 GMT+0200 (Central European Summer Time),3.283333333333333,0.016666666666666666

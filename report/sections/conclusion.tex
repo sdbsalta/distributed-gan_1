@@ -1,0 +1,20 @@
+\chapter{Conclusion}
+The implementation of the MD-GAN in a distributed setting has provided valuable insights into the complexities and potential of distributed Deep Learning systems. This research has shown both the benefits and challenges of training GANs across multiple nodes, especially regarding scalability, efficiency, and data privacy.
+
+Our experiments have shown that distributed training can offer significant advantages in terms of scalability. By using multiple nodes and machines, we were able to distribute the workload over multiple nodes and exploit more computational and memory resources than a single machine could provide. This setup also allows the interconnect machines with different architectures and computing powers.
+
+% Exploring this aspect in further work could give interesting results, especially in optimizing the use of different types of computing resources.
+
+Additionally, the decentralized nature of the MD-GAN framework offers natural privacy benefits. Thanks to its distributed approach, sensitive data does not need to be centralized, which reduces the risk of data breaches. However, the exchange of model parameters and discriminator states among nodes still poses potential security risks. To further enhance privacy, using strong privacy-preserving methods, like advanced encryption methods and differential privacy techniques, is essential to protect sensitive information.
+
+
+However, the distributed setting also introduced several challenges that need to be addressed to fully realize the potential of this approach. Network issues and communication overhead were identified as major bottlenecks, affecting overall training efficiency. The results showed that the relationship between epoch duration and the number of workers is almost linear, suggesting there are factors that increase training times as the number of nodes grows.
+
+Moreover, the convergence of the distributed model was found to be less effective compared to the standalone version. The aggregated gradients from multiple workers tended to cancel each other out, making it harder for the model to converge to an optimal solution. This highlights some space for improvement regarding the aggregation process and the exploration of other methods to improve convergence in distributed settings.
+
+In conclusion, this research has improved the understanding of distributed GAN training and provided a foundation for future improvements. By addressing the identified limitations and exploring new strategies for optimizing communication, we can enhance the performance and applicability of distributed GANs in various real-world scenarios. The open-source implementation and detailed evaluation presented in this study contribute to the ongoing development of distributed Deep Learning systems.
+
+% \textbf{PAS SUR CE BOUT LA : could renew interest in the GAN architecture}. This work sets the stage for future research aimed at overcoming the challenges and fully using the potential of distributed GAN training, paving the way for more efficient and secure distributed deep learning solutions.
+
+
+% Talk about the pros: scalability (allows to use more hardware that a single machine could not use), privacy, etc...

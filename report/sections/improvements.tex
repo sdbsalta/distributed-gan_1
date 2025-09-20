@@ -1,0 +1,46 @@
+\chapter{Improvements}
+% This chapter describes potential enhancements and future directions based on the knowledge acquired from our course on Distributed Deep Learning System, extensive discussions with our supervisors, and insights from relevant literature.
+
+\section{Non-IID data and computational ressource}
+A method to distribute the data in a non-IID fashion was implemented, but we did not include results from this setting due to time constraints. However, studying the effect of non-IID data on the different metrics we collected could provide more insight into potential improvements needed for the MD-GAN architecture. In fact, transitioning from an IID to a non-IID setting could significantly impact convergence to an optimal solution, potentially necessitating updates to the model architecture.
+
+Non-IID can manifest in various forms, not only in the form of data distribution. For instance, differences in computing power across different clients can lead to significant variations in processing speed. Therefore, an interesting aspect of the MD-GAN to explore is the impact of workers with varying computational power. This variation could lead to increased idle time between when the server sends data to the workers and when it receives their feedback. To address this idle time, a solution could be implemented using the method described in section \ref{sec:idle}.
+
+Future work could include deeper analysis of these variations and their impacts, enhancing the robustness of the Multi-Discriminator GAN architecture.
+
+% Our project benefits from its deployment on Google Cloud, which simulates real-time operations. This capability is crucial as it differs from traditional simulated setups that operate sequentially. 
+
+% Operating in this live environment allows us to dynamically observe and adjust the system, responding immediately to changes as they occur. This is particularly advantageous for distributed systems like ours, where continuous data flow and rapid system response are critical. Such real-time processing not only facilitates immediate insights into performance and scalability but also enhances the overall efficiency of the distributed GAN model.
+
+% Exploring further with this live setting could be beneficial, particularly in implementing improvements such as managing non-IID data, which would further enhance the system’s adaptability and performance in real-world scenarios.
+
+
+
+\section{Attack and defense mechanisms}
+% Model and data poisoning attacks, for instance, could severely weaken the integrity of the generated models. Similarly, backdoor attacks pose significant threats that could manipulate the model outputs subtly yet effectively. Implementing and testing defense strategies like Multi-Krum, Trimmed Mean, Majority Sign, and Clipping, which were discussed in our lectures, could protect against these vulnerabilities. 
+
+Research on attacks and defenses in the field of distributed Deep Learning is very active, with many new methods emerging. One such attack is "model stealing," where an attacker replicates our model by querying it with their own data, and uses the outputs to reproduce the results the original model.x
+
+Figure \ref{fig:freerider} describes another type of attack that could occur when deploying this model on a crowd of workers with potentially malicious intentions, known as a "free-rider" attack \cite{fraboni2021freerider}. In this scenario, one of the workers might decide not to send accurate feedback to the server, significantly impacting the training of the generator. In our work, we assumed that all workers are honest and cooperative. However, in a situation where we deploy this model on a crowd of smartphones, an individual could easily tweak the feedback sent to our server, potentially disrupting the entire training process. These types of attacks are relatively easy to perform, but fortunately, some defenses exist to counteract them such as WEF-Defense \cite{chen2022rethinking} or STD-DAGMM \cite{fraboni2021freerider}.
+
+In a more advanced version of our system, and depending on the specific use case, it's important to implement strategies to defend against free-rider nodes.
+
+\figureWithCaption{freerider}{Source: Prof. Dr. Lydia Y. Chen for the Distributed Deep Learning class at University of Neuchâtel}{8cm}{0}
+
+
+\section{Enhancing data privacy}
+The distributed nature of our model inherently supports data privacy by processing data locally at the client level. However, to reinforce privacy guarantees, implementing advanced encryption methods for data in transit could prevent interception and unauthorized access. 
+
+Another concerning type of attack is "gradient inversion", which occurs when the server attempts to reconstruct the real images held locally by the workers. Several studies have demonstrated the effectiveness of such attacks, including AGIC \cite{wang2020sapag}, InvG, and AGIC \cite{9996844}. However, fewer works have been published on defense strategies. An interesting defense approach is detailed in \cite{huang2021evaluating}, and the authors provide an open-source tool for their method, available at the following GitHub repository: \url{https://github.com/Princeton-SysML/GradAttack}.
+
+In a potential production setting where the server could be malicious, it is crucial to consider using a defense strategy to keep the data completely invisible to the server. Implementing robust defense mechanisms can help protect the privacy and integrity of the data held by the workers.
+
+% Additionally, applying Differential Privacy techniques, by injecting noise into the data or during the computation process, could help us determine the optimal balance between privacy and the utility of the generated models. 
+
+% These enhancements would make our system more robust against attempts to extract sensitive information from the model.
+
+
+\section{Improving the model's performance}
+Lastly, optimizing the performance of our distributed GAN model is essential. Adjusting model configurations and tuning hyperparameters could lead to significant improvements. 
+
+Although such refinements might not drastically modify our main findings, they are crucial for achieving the best possible outcomes from our implementations. This process involves methodical experimentation and could produce valuable insights into the most effective configurations for distributed GANs.

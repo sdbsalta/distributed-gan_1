@@ -1,0 +1,57 @@
+\chapter{Scientific questions and hypothesis}
+In distributed Deep Learning systems, especially those involving GANs, several important scientific questions emerge. These questions and hypothesis help us understand the benefits and challenges of implementing GANs across distributed settings. The following questions and hypotheses are fundamental to our research and will assist in evaluating the capability and effectiveness of distributed GAN architecture. The empirical testing of these hypotheses through experiments will contribute to a deeper understanding of the trade-offs and benefits of distributed GAN training.
+
+\subsection*{A) Does training GANs in a distributed setting helps converging to an optimal solution in fewer epochs than a standalone version?} \label{que:a}
+In distributed GAN settings, multiple computational nodes collaborate to train the model. This arrangement potentially allows the model to simultaneously learn more diverse features from different data subsets. We aim to determine if this setup leads to faster convergence compared to traditional, centralized training methods; Where the model learns from a single data source. However, it is also possible that the lack of coordination among nodes could lead to conflicting updates, slowing down the convergence process.
+
+Therefore we define our first hypothesis this way:\\
+\textbf{H1: Training a GAN in a distributed setting with multiple discriminators helps converging to an optimal solution in fewer epochs than a standalone version.}
+
+% \subsection*{B) Can distributed training of GANs lead to a superior final model?}
+% Leveraging the computational power and data variety from multiple sources, distributed GANs might not only accelerate the training process but also enhance the quality of the generated outputs. This question explores whether the final model, trained across multiple nodes, produces more accurate and realistic results than those trained on a centralized system.
+
+\subsection*{B) Does training GANs in a distributed setting slow down the time to complete an epoch compared to a standalone setting?} \label{que:b}
+
+It might seem intuitive to assume that training a GAN with multiple workers would terminate an epoch faster than in a standalone setting, similar to how multiple cores can speed up processing. For example, one might expect that having two workers would be twice as fast as a standalone setting. However, this assumption requires a more detailed examination.
+
+In distributed GAN training, the same operation is performed multiple times and the results are averaged, which does not necessarily reduce the overall processing time per epoch. Multiple workers could actually make the completion of an epoch slower in a distributed setting.
+
+Several factors can affect the overall training time, including network latency, synchronization overhead, and the efficiency of data distribution and aggregation. Communication overhead between the server and workers can significantly impact training speed, and synchronization of gradients across all workers can become a bottleneck, especially as the number of workers increases. Moreover, the efficiency of distributed training also depends on network bandwidth.
+
+Therefore, we define our second hypothesis this way:\\
+\textbf{H2: Training a GAN in a distributed setting with multiple discriminators extends the time it takes for an epoch to complete compared to a standalone setting.}
+
+% ADDED ON TOP
+% \section{Summary of research interrogation}
+%In summary, while distributed training of GANs has the potential to reduce the time per epoch by leveraging parallelism, the actual speedup achieved can be influenced by communication overhead, synchronization issues, network performance, and the effectiveness of workload distribution. Therefore, achieving a linear speedup, where two workers perform twice as fast as one, is not always guaranteed and requires careful consideration of these factors. These questions and hypotheses are fundamental to our research and will assist in evaluating the capability and effectiveness of distributed GAN architecture. The empirical testing of these hypotheses through experiments will contribute to a deeper understanding of the trade-offs and benefits of distributed GAN training.
+
+
+% \subsection*{C) Does distributed training of GANs offer enhanced privacy protection?)} 
+% Distributed learning allows models to be trained directly on data sources without the need for centralization. This method minimizes the risk of exposing sensitive data, thereby potentially enhancing privacy protections.
+
+
+ 
+% \newpage
+
+
+% \section{Hypothesis}
+% Building on the scientific questions, we formulate testable hypotheses that will guide the experimental phase of our project. These hypotheses provide  predictions that relate directly to the potential advantages of distributed GAN training.
+
+% \subsection{Hypothesis on Convergence Speed}
+% \begin{itemize}
+%     \item \textbf{Statement}: Distributed training of GANs converges faster to an optimal solution than centralized training methods.
+%     \item \textbf{Reasoning}: Distributed systems enable parallel processing of data across multiple nodes, which can lead to more efficient exploration of the solution space. With multiple discriminators working with different data subsets, the learning process could be accelerated by aggregating diverse gradients that guide the generator more effectively.
+% \end{itemize}
+
+
+% \subsection{Hypothesis on Model Quality}
+% \begin{itemize}
+%     \item \textbf{Statement}: GANs trained in a distributed manner produce more accurate and realistic outputs than those trained in a centralized manner.
+%     \item \textbf{Reasoning}: Each discriminator in a distributed GAN framework learns from a unique subset of data, potentially leading to a more comprehensive understanding of the overall data distribution. This multi-perspective learning approach could result in a generator that creates higher-quality, more diverse data.
+% \end{itemize}
+
+% \subsection{Hypothesis on Privacy Protection}
+% \begin{itemize}
+%     \item \textbf{Statement}: Distributed training of GANs provides enhanced privacy protection compared to centralized training setups.
+%     \item \textbf{Reasoning}: Distributed training methodologies do not require the transfer of raw data between nodes, only model parameters and updates are exchanged. This minimizes the exposure of sensitive data, reducing the risk of data breaches. Furthermore, the separation of data across nodes can prevent any single point from reconstructing or accessing complete sensitive information.
+% \end{itemize}

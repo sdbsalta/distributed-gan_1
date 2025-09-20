@@ -1,0 +1,24 @@
+\chapter{Google Compute Engine statistics}
+
+\section{CPU}
+\figureWithCaption{cpu_usage}{Percent utilization of the vCPUs reservation for this VM machine type as measured by the hypervisor. This may differ from the CPU utilization as reported by the guest operating system. For shared-core VMs, this can go over 100\% during bursting.}{\textwidth}{0}
+
+\section{Disk}
+\figureWithCaption{read_disk}{The average rate of bytes written to and read from the VM's disks in one-minute time periods. Disk performance is influenced by a variety of factors like storage type, VM size, and disk size.}{\textwidth}{0}
+
+\figureWithCaption{write_disk}{The average rate of read and write I/O operations to the disk in one-minute time periods, grouped by the storage type and device type. Disk performance is influenced by a variety of factors like storage type, VM size, and disk size.}{\textwidth}{0}
+
+\figureWithCaption{iops_read}{The average rate of read and write I/O operations to the disk in one-minute time periods, grouped by the storage type and device type. Disk performance is influenced by a variety of factors like storage type, VM size, and disk size.}{\textwidth}{0}
+
+\figureWithCaption{iops_write}{The average rate of read and write I/O operations to the disk in one-minute time periods, grouped by the storage type and device type. Disk performance is influenced by a variety of factors like storage type, VM size, and disk size.}{\textwidth}{0}
+
+\section{Network}
+\figureWithCaption{sent_bytes}{Rate of sent and received network traffic bytes aligned in 1-minute intervals.}{\textwidth}{0}
+
+\figureWithCaption{received_bytes}{Rate of sent and received network traffic bytes aligned in 1-minute intervals.}{\textwidth}{0}
+
+\figureWithCaption{network_usage_google_services}{Estimated number of distinct flows in a given minute. A flow is defined as a combination of (source IP, destination IP, source port, destination port, protocol). This estimate is based on sampled packets and may miss some flows. If a connection spans multiple minutes it can also be counted multiple times. Please note that this metric is currently in preview.}{\textwidth}{0}
+
+\figureWithCaption{network_usage_vms_different_region_europe_central2}{Estimated number of distinct flows in a given minute. A flow is defined as a combination of (source IP, destination IP, source port, destination port, protocol). This estimate is based on sampled packets and may miss some flows. If a connection spans multiple minutes it can also be counted multiple times. Please note that this metric is currently in preview.}{\textwidth}{0}
+
+\figureWithCaption{network_usage_vms_different_region_europe_west4}{Estimated number of distinct flows in a given minute. A flow is defined as a combination of (source IP, destination IP, source port, destination port, protocol). This estimate is based on sampled packets and may miss some flows. If a connection spans multiple minutes it can also be counted multiple times. Please note that this metric is currently in preview.}{\textwidth}{0}

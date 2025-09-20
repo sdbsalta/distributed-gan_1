@@ -1,0 +1,63 @@
+TimeSeries ID,instance/cpu/utilization.gce_instance.ALIGN_MEAN.REDUCE_NONE.metric.type="compute.googleapis.com/instance/cpu/utilization" resource.type="gce_instance" resource.labels."instance_id"="1345602841643241709" resource.labels."zone"="europe-central2-c" AND resource.labels."project_id"="ddls-owen-gombas".60s.instance_id:1345602841643241709.project_id:ddls-owen-gombas.zone:europe-central2-c.instance_name:instance-20240520-173618
+instance_name,instance-20240520-173618
+instance_id,1345602841643241709
+zone,europe-central2-c
+project_id,ddls-owen-gombas
+Wed May 22 2024 19:44:00 GMT+0200 (Central European Summer Time),0.036368279812639535
+Wed May 22 2024 19:45:00 GMT+0200 (Central European Summer Time),0.08310001619409679
+Wed May 22 2024 19:46:00 GMT+0200 (Central European Summer Time),0.24228592139791846
+Wed May 22 2024 19:47:00 GMT+0200 (Central European Summer Time),0.3380638637983945
+Wed May 22 2024 19:48:00 GMT+0200 (Central European Summer Time),0.3315159868763885
+Wed May 22 2024 19:49:00 GMT+0200 (Central European Summer Time),0.1603069952308033
+Wed May 22 2024 19:50:00 GMT+0200 (Central European Summer Time),0.0459149326883941
+Wed May 22 2024 19:51:00 GMT+0200 (Central European Summer Time),0.21297854408571765
+Wed May 22 2024 19:52:00 GMT+0200 (Central European Summer Time),0.3355954888024826
+Wed May 22 2024 19:53:00 GMT+0200 (Central European Summer Time),0.2781661511204675
+Wed May 22 2024 19:54:00 GMT+0200 (Central European Summer Time),0.29262011680100386
+Wed May 22 2024 19:55:00 GMT+0200 (Central European Summer Time),0.3307772140502569
+Wed May 22 2024 19:56:00 GMT+0200 (Central European Summer Time),0.1596450073523556
+Wed May 22 2024 19:57:00 GMT+0200 (Central European Summer Time),0.037145440294640744
+Wed May 22 2024 19:58:00 GMT+0200 (Central European Summer Time),0.21032472565837754
+Wed May 22 2024 19:59:00 GMT+0200 (Central European Summer Time),0.32980111537434975
+Wed May 22 2024 20:00:00 GMT+0200 (Central European Summer Time),0.16710014088907882
+Wed May 22 2024 20:01:00 GMT+0200 (Central European Summer Time),0.03978950589875391
+Wed May 22 2024 20:02:00 GMT+0200 (Central European Summer Time),0.032318981953047415
+Wed May 22 2024 20:03:00 GMT+0200 (Central European Summer Time),0.17834823250599735
+Wed May 22 2024 20:04:00 GMT+0200 (Central European Summer Time),0.32059517417217953
+Wed May 22 2024 20:05:00 GMT+0200 (Central European Summer Time),0.3379250868962951
+Wed May 22 2024 20:06:00 GMT+0200 (Central European Summer Time),0.33361153575694213
+Wed May 22 2024 20:07:00 GMT+0200 (Central European Summer Time),0.32369925296411567
+Wed May 22 2024 20:08:00 GMT+0200 (Central European Summer Time),0.1567236347543106
+Wed May 22 2024 20:09:00 GMT+0200 (Central European Summer Time),0.02961892009791427
+Wed May 22 2024 20:10:00 GMT+0200 (Central European Summer Time),0.030883374806952208
+Wed May 22 2024 20:11:00 GMT+0200 (Central European Summer Time),0.04166923058007038
+Wed May 22 2024 20:12:00 GMT+0200 (Central European Summer Time),0.03961161725628699
+Wed May 22 2024 20:13:00 GMT+0200 (Central European Summer Time),0.03125480854819216
+Wed May 22 2024 20:14:00 GMT+0200 (Central European Summer Time),0.08033922244884101
+Wed May 22 2024 20:15:00 GMT+0200 (Central European Summer Time),0.23282661705659394
+Wed May 22 2024 20:16:00 GMT+0200 (Central European Summer Time),0.24499872325468458
+Wed May 22 2024 20:17:00 GMT+0200 (Central European Summer Time),0.26193962974484747
+Wed May 22 2024 20:18:00 GMT+0200 (Central European Summer Time),0.17022621805541197
+Wed May 22 2024 20:19:00 GMT+0200 (Central European Summer Time),0.03976608816175636
+Wed May 22 2024 20:20:00 GMT+0200 (Central European Summer Time),0.09625852113433667
+Wed May 22 2024 20:21:00 GMT+0200 (Central European Summer Time),0.24617790253590405
+Wed May 22 2024 20:22:00 GMT+0200 (Central European Summer Time),0.1695981705955925
+Wed May 22 2024 20:23:00 GMT+0200 (Central European Summer Time),0.038711242629377314
+Wed May 22 2024 20:24:00 GMT+0200 (Central European Summer Time),0.06481708810102493
+Wed May 22 2024 20:25:00 GMT+0200 (Central European Summer Time),0.22794272266760343
+Wed May 22 2024 20:26:00 GMT+0200 (Central European Summer Time),0.3293819361453643
+Wed May 22 2024 20:27:00 GMT+0200 (Central European Summer Time),0.15915433506318852
+Wed May 22 2024 20:28:00 GMT+0200 (Central European Summer Time),0.028351198672172964
+Wed May 22 2024 20:29:00 GMT+0200 (Central European Summer Time),0.18088871108972548
+Wed May 22 2024 20:30:00 GMT+0200 (Central European Summer Time),0.3217539870539895
+Wed May 22 2024 20:31:00 GMT+0200 (Central European Summer Time),0.2565164328947882
+Wed May 22 2024 20:32:00 GMT+0200 (Central European Summer Time),0.09255821053896701
+Wed May 22 2024 20:33:00 GMT+0200 (Central European Summer Time),0.031673594599624266
+Wed May 22 2024 20:34:00 GMT+0200 (Central European Summer Time),0.11645826256335567
+Wed May 22 2024 20:35:00 GMT+0200 (Central European Summer Time),0.12358278283318971
+Wed May 22 2024 20:36:00 GMT+0200 (Central European Summer Time),0.04240221999333092
+Wed May 22 2024 20:37:00 GMT+0200 (Central European Summer Time),0.010213835351495011
+Wed May 22 2024 20:38:00 GMT+0200 (Central European Summer Time),0.010808454418906877
+Wed May 22 2024 20:39:00 GMT+0200 (Central European Summer Time),0.009158245955381972
+Wed May 22 2024 20:40:00 GMT+0200 (Central European Summer Time),0.009401777390947549
+Wed May 22 2024 20:41:00 GMT+0200 (Central European Summer Time),0.01085447474195765

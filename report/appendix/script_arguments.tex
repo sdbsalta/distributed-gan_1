@@ -1,0 +1,37 @@
+\chapter{Script arguments} \label{appendix:args}
+\section{Shared}
+These arguments are shared across \code{run-distributed.sh} and \code{run-standalone.sh}.
+\begin{itemize}
+    \item \textbf{batch\_size}: The batch size of the data being processed in every epoch. It determines the number of samples that will be propagated through the network in a single pass.
+    \item \textbf{discriminator\_lr}: The learning rate for the discriminator. It controls how much to change the model in response to the estimated error each time the model weights are updated.
+    \item \textbf{generator\_lr}: The learning rate for the generator, similar in function to the discriminator learning rate.
+    \item \textbf{dataset}: The dataset used for training. It has to match with the file name (case sensitive) in the \code{datasets} folder (MNIST, CIFAR10 or CelebA).
+    \item \textbf{model}: The model used for training, which in this setup always corresponds to the dataset.
+    \item \textbf{epochs}: The number of times the entire training dataset will be passed through the network.
+    \item \textbf{local\_epochs}: The number of epochs for local training in federated learning settings. In our implementation it is always set to 1.
+    \item \textbf{iid}: Indicates whether the data distribution is independent and identically distributed (IID). A value of 1 means that the data is IID, 0 for non-IID.
+    \item \textbf{n\_samples\_fid}: The number of samples used to compute the Fréchet Inception Distance (FID), a metric for evaluating the quality of generated images. Indicating a very uge value will consider all the images contained in the $K$ batches generated for every client.
+    \item \textbf{device}: The device used for computation, to run on the CPU indicate 'cpu', to run on a Apple device indicate 'mps' and to run on a NVIDIA GPU indicate 'cuda'.
+    \item \textbf{log\_interval}: The frequency (in terms of iterations) at which the training process logs information. This is because logging could take time and slow down the training, so we should avoid doing it at every iteration.
+    \item \textbf{beta\_1}: The exponential decay rate for the first moment estimates in the Adam optimizer, set to 0.0 in this setup.
+    \item \textbf{beta\_2}: The exponential decay rate for the second moment estimates in the Adam optimizer, set to 0.999 in this setup.
+\end{itemize}
+
+\section{Standalone}
+These arguments are dedicted to the \code{run-standalone.sh} script.
+\begin{itemize}
+    \item \textbf{seed}: The seed of the experiment, for reproducibility. The same seed will generate the exact same output from a run to another one.
+\end{itemize}
+
+\section{Distributed}
+These arguments are dedicated to the \code{run-distributed.sh} script.
+\begin{itemize}
+    \item \textbf{seed}: The seed of the experiment, for reproducibility. The same seed will generate the exact same output from a run to another one. Every worker will have a different seed which is the addition of their rank and the given seed, for instance if the seed is 1, the server (rank 0) will have the seed seed+$0$, worker 1 seed+$1$, worker 2 seed+$2$, ..., worker $N$ seed+$N$.
+    \item \textbf{world\_size}: How many nodes participate to the training, including the server.
+    \item \textbf{backend}: The PyTorch distributed backend to use, in our experiments we will always use GLOO because is allow for more flexibility. NCCL will not allow use to run multiple nodes on a single GPU device, only one can run per GPU, which isn't the case with the GLOO backend. However GLOO requires to move the data on the CPU before sending a tensor which makes the process of sending and receiving slower. If you attend to run a single node per GPU, use NCCL, otherwise use GLOO.
+    \item \textbf{master\_port}: The port the server will listen to.
+    \item \textbf{master\_hostname}: The hostname of the server. It can also be an IP address.
+    \item \textbf{swap\_interval}: The $E$ multiplicator to the $i \mod \frac{mE}{b} = 0$ condition.
+    \item \textbf{network\_interface}: The network interface the programme should use to communicate, usually \code{lo} on Google Cloud, \code{en0} on Apple devices. To find a network interface which work on a Linux machine you should type \code{ip addr show} in a terminal.
+    \item \textcolor{red}{\textbf{ranks} (at script call)}: This argument should be a parameter given when calling the script. It provides the list of ranks that should be started, they can be separated by a comma (e.g. 0,1,2,3,4) to define the specific ranks to start, or by two dots to define an inclusive range (e.g. 0..30 will start the ranks from 0 to 30 included). An even number of workers should be started when calling the script otherwise the error \code{ValueError: The number of workers should be even} will be thrown.
+\end{itemize}

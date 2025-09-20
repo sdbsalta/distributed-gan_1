@@ -1,0 +1,177 @@
+\chapter{Models} \label{appendix:models}
+\section{MNIST models}
+Based on \url{https://github.com/lyeoni/pytorch-mnist-GAN}.
+\subsection*{Discriminator}
+\begin{enumerate}
+    \item \textbf{Input:} Image of shape 1x28x28 (784).
+    \item \textbf{Layer 1:} 
+    \begin{itemize}
+        \item Fully connected layer with 1024 units.
+        \item Leaky ReLU activation (slope 0.2).
+        \item Dropout (0.3).
+    \end{itemize}
+    \item \textbf{Layer 2:} 
+    \begin{itemize}
+        \item Fully connected layer with 512 units.
+        \item Leaky ReLU activation (slope 0.2).
+        \item Dropout (0.3).
+    \end{itemize}
+    \item \textbf{Layer 3:} 
+    \begin{itemize}
+        \item Fully connected layer with 256 units.
+        \item Leaky ReLU activation (slope 0.2).
+        \item Dropout (0.3).
+    \end{itemize}
+    \item \textbf{Layer 4:} 
+    \begin{itemize}
+        \item Fully connected layer with 1 unit.
+        \item Sigmoid activation.
+    \end{itemize}
+    \item \textbf{Output:} 1 value, probability that the input data is real.
+\end{enumerate}
+
+\subsection*{Generator}
+\begin{enumerate}
+    \item \textbf{Input:} Latent vector of dimension 100.
+    \item \textbf{Layer 1:} 
+    \begin{itemize}
+        \item Fully connected layer with 256 units.
+        \item Leaky ReLU activation (slope 0.2).
+    \end{itemize}
+    \item \textbf{Layer 2:} 
+    \begin{itemize}
+        \item Fully connected layer with 512 units.
+        \item Leaky ReLU activation (slope 0.2).
+    \end{itemize}
+    \item \textbf{Layer 3:} 
+    \begin{itemize}
+        \item Fully connected layer with 1024 units.
+        \item Leaky ReLU activation (slope 0.2).
+    \end{itemize}
+    \item \textbf{Layer 4:} 
+    \begin{itemize}
+        \item Fully connected layer with units equal to the number of pixels in the output image: 784.
+        \item Tanh activation.
+    \end{itemize}
+    \item \textbf{Output:} 28x28 1-channel image.
+\end{enumerate}
+
+\section{CIFAR-10 models}
+Based on \url{https://github.com/Ksuryateja/DCGAN-CIFAR10-pytorch}.
+\subsection*{Discriminator}
+\begin{enumerate}
+    \item \textbf{Input:} 32x32 3-channel image.
+    \item \textbf{Layer 1:} 
+    \begin{itemize}
+        \item Convolutional layer with 64 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Leaky ReLU activation.
+    \end{itemize}
+    \item \textbf{Layer 2:} 
+    \begin{itemize}
+        \item Convolutional layer with 128 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+        \item Leaky ReLU activation.
+    \end{itemize}
+    \item \textbf{Layer 3:} 
+    \begin{itemize}
+        \item Convolutional layer with 256 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+        \item Leaky ReLU activation.
+    \end{itemize}
+    \item \textbf{Layer 4:} 
+    \begin{itemize}
+        \item Convolutional layer with 1 filter, kernel size 4x4, stride 1x1.
+        \item Sigmoid activation.
+    \end{itemize}
+    \item \textbf{Output:} 1 value, probability that the input data is real.
+\end{enumerate}
+
+\subsection*{Generator}
+\begin{enumerate}
+    \item \textbf{Input:} 100-dimensional latent vector.
+    \item \textbf{Layer 1:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 512 filters, kernel size 4x4, stride 1x1.
+        \item Batch Normalization.
+        \item ReLU activation.
+    \end{itemize}
+    \item \textbf{Layer 2:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 256 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+        \item ReLU activation.
+    \end{itemize}
+    \item \textbf{Layer 3:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 128 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+        \item ReLU activation.
+    \end{itemize}
+    \item \textbf{Layer 4:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 3 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Tanh activation.
+    \end{itemize}
+    \item \textbf{Output:} 32x32 3-channel image.
+\end{enumerate}
+
+\section{CelebA models}
+Based on \url{https://github.com/AKASHKADEL/dcgan-celeba}.
+\subsection*{Discriminator}
+\begin{enumerate}
+    \item \textbf{Input:} 3-channel image.
+    \item \textbf{Layer 1:} 
+    \begin{itemize}
+        \item Convolutional layer with 64 filters, kernel size 4x4, stride 2x2, padding 1x1.
+    \end{itemize}
+    \item \textbf{Layer 2:} 
+    \begin{itemize}
+        \item Convolutional layer with 128 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+    \end{itemize}
+    \item \textbf{Layer 3:} 
+    \begin{itemize}
+        \item Convolutional layer with 256 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+    \end{itemize}
+    \item \textbf{Layer 4:} 
+    \begin{itemize}
+        \item Convolutional layer with 512 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+    \end{itemize}
+    \item \textbf{Layer 5:} 
+    \begin{itemize}
+        \item Convolutional layer with 1 filter, kernel size 4x4, stride 1x1.
+    \end{itemize}
+    \item \textbf{Output:} 1 value, probability that the input data is real.
+\end{enumerate}
+
+\subsection*{Generator}
+\begin{enumerate}
+    \item \textbf{Input:} 100-dimensional latent vector.
+    \item \textbf{Layer 1:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 512 filters, kernel size 4x4, stride 1x1.
+        \item Batch Normalization.
+    \end{itemize}
+    \item \textbf{Layer 2:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 256 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+    \end{itemize}
+    \item \textbf{Layer 3:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 128 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+    \end{itemize}
+    \item \textbf{Layer 4:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 64 filters, kernel size 4x4, stride 2x2, padding 1x1.
+        \item Batch Normalization.
+    \end{itemize}
+    \item \textbf{Layer 5:} 
+    \begin{itemize}
+        \item Transposed Convolutional layer with 3 filters, kernel size 4x4, stride 2x2, padding 1x1.
+    \end{itemize}
+    \item \textbf{Output:} 64x64 3-channel image.
+\end{enumerate}

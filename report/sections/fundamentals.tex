@@ -1,0 +1,28 @@
+\chapter{Related works and fundamentals}
+
+\section{Generative Adversarial Networks (GANs)}
+Generative Adversarial Networks (GANs) are a type of generative model that has become popular recently. Introduced by Goodfellow et al. in 2014 \cite{goodfellow2014generative}, GANs are used in many areas like image generation, style transfer, and data augmentation. The main idea behind GANs is to train two models, a generator and a discriminator, in a competition. The generator learns to create data that looks real, while the discriminator learns to tell apart the generator's fake data from real data. Both networks are trained at the same time: the generator tries to trick the discriminator, and the discriminator tries to correctly identify the real data. This adversarial training helps the generator learn the real data distribution and produce realistic samples.
+
+
+Figure \ref{fig:gan} shows the typical training process of a GAN. Step (1) is updating the discriminator's weights, which happens just before updating the generator, shown in step (2). To update the discriminator, we pass a batch of real images and a batch of fake images (created by the generator) through the discriminator to get its predictions. The discriminator's weights are then updated to reduce errors in prediction, such as misclassifying a real image as fake.
+
+
+After updating the discriminator's weights, we focus on the generator. We pass a batch of fake images through the discriminator again to get its predictions. We then calculate a Binary Cross Entropy (BCE) loss between the discriminator's output for the fake images and the labels for real images. This loss will be high if the generator fails to trick the discriminator and low if it succeeds. Since the optimizer updates the weights to minimize this loss, the generator gets better at creating realistic fake images over time.
+
+
+The important thing to note in this figure is that the generator never directly accesses the real data, it only uses the output from the discriminator to update its weights. This is why distributing the discriminators allows the real images to be kept locally, avoiding the need to share them with other nodes.
+
+To grasp an even better understanding of this concept, we advice to reader to visit GAN Lab\footnote{\url{https://poloclub.github.io/ganlab/}} \cite{Kahng_2019} which provides a great visualization helping to understand the process of training a GAN.
+
+\figureWithCaption{gan}{(1) Update the discriminator's model, (2) Update the generator's model}{\textwidth}{0}
+
+\section{Distributed Deep Learning}
+Distributed Deep Learning is the process of training Deep Learning models across multiple computational nodes that are connected and can communicate. These nodes can be connected in different ways, like through a traditional Ethernet connection. Also, a single machine using multiple GPUs can be considered a distributed setting. The setup in both cases is quite similar; the main difference is the communication protocol used. This protocol is often managed by the most popular libraries for Distributed Deep Learning.
+
+
+By spreading the work across multiple devices, we can train Deep Learning models more efficiently and on a larger scale, making the training process scalable. It also allows for collaborative training of models across multiple institutions with sensitive data, enabling them to train a single model together without sharing their data. This approach is especially useful for training large models on big datasets, which a single machine or a small cluster might not be able to handle due to limited memory or processing power. However, there are challenges, such as communication delays, synchronization problems, and workload balancing. With the right setup and optimizations, distributed deep learning can greatly enhance privacy, scalability, and efficiency.
+
+
+
+\section{Multi-Discriminator GANs}
+Multi-Discriminator GANs (MD-GANs) are a type of GAN that uses multiple discriminator models to effectively scale the training process. While the typical GAN architecture has a single discriminator that learns to tell apart the generator's fake data from real data, MD-GANs use multiple discriminators. These discriminators can be used either with multiple generators \cite{fedgan} or with a single one \cite{mdgan}, but in both cases, each discriminator learns from a different part of the real data we are training on. Training multiple discriminators at the same time helps distribute the computational load across devices and keeps privacy, as each discriminator only accesses its local data. This setup avoids centralizing sensitive data and allows the training of GANs on large, distributed datasets, improving both privacy and scalability.

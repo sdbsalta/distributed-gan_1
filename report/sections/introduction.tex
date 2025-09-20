@@ -1,0 +1,20 @@
+\chapter{Introduction}
+
+\section{Background}
+Generative Adversarial Networks (GANs) have revolutionized the field of Machine Learning by enabling the creation of highly realistic images. A great example of the results GANs can achieve is showcased on the website \href{https://this-person-does-not-exist.com/en}{this-person-does-not-exist.com}. These networks learn the distribution of a given dataset to generate new similar data points. The standard GAN framework involves a generator and a discriminator in an adversarial setup. The generator's goal is to produce data which are similar to real data, while the discriminator aims to differentiate between the generated and real data.
+
+\section{Challenges in training GANs}
+Despite their success, GANs face several challenges in the training process, particularly with large datasets. These challenges include the instability during training, where the generator and discriminator can become unbalanced, leading to poor performance. Training GANs is also computationally expensive because of the complex models and large amount of data involved. When data privacy is a concern, such as in medical or financial applications, the situation becomes even more complex as sensitive data cannot be easily shared or centralized, complicating the distributed training process.
+
+\section{Distributed GAN training}
+To address these challenges, distributed training methods for GANs have been developed. These methods allow GANs to be trained across multiple computational nodes, using parallel resources to improve training efficiency. One promising approach is training with multiple discriminators, where each discriminator accesses only its local data and contributes to training a global generator. This setup not only scales GAN training but also enhance data privacy by keeping sensitive data decentralized.
+
+\section{Our contribution}
+This work builds on the existing multi-discriminator GAN frameworks, specifically extending the approach described in the original MD-GAN paper \cite{mdgan}.
+
+Our main contributions are:
+\begin{enumerate}
+    \item \textbf{Open-Source implementation}: We provide an open-source implementation of the MD-GAN framework, which was not originally available. This implementation works across real networked environments, demonstrating the feasibility and scalability of distributed GANs in practical applications.
+    \item \textbf{Performance evaluation results}: We present a detailed analysis of GAN performance in a real distributed setting, taking into account networking constraints and bottlenecks that a production-ready product might encounter. We also describe a way to improve the process and reduce the idle time in every node, opening the way for speeding up the distributed training.
+    \item \textbf{Tools for further analysis}: Our implementation includes tools for deeper analysis, such as evaluating on non-IID datasets, offering a flexible framework for new datasets, and an automatic data collection system with detailed plot generation.
+\end{enumerate}

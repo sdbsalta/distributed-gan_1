@@ -1,0 +1,52 @@
+% \input{sections/glossary.tex}
+\title{
+    \includegraphics[width=2cm]{\imagesDirectory/unibe.png}\hspace{2.5cm}
+    \includegraphics[width=2cm]{\imagesDirectory/unine.png}\hspace{2.5cm}
+    \includegraphics[width=2cm]{\imagesDirectory/unifr.png}
+    \vspace{1cm}\\
+    \documentTitle
+}
+\date{\deliveryDate}
+
+\headerFooter{%
+    \fancyhead[L]{}%
+    \fancyhead[C]{}%
+    \fancyhead[R]{}%
+}{\slshape\nouppercase{\leftmark}}{\thepage}{\deliveryDate}
+
+\def\code#1{\texttt{#1}}
+
+\begin{document}
+\nocite{*}
+
+\maketitle
+
+\tableofcontents
+% \printglossary[type=\acronymtype,title=Glossary]
+
+\subfile{sections/abstract.tex}
+\subfile{sections/introduction.tex}
+\subfile{sections/questions.tex}
+\subfile{sections/fundamentals.tex}
+% \subfile{sections/review.tex}
+\subfile{sections/methodology.tex}
+\subfile{sections/experimental_setup.tex}
+\subfile{sections/results.tex}
+\subfile{sections/discussion.tex}
+\subfile{sections/open.tex}
+\subfile{sections/limitations.tex}
+\subfile{sections/conclusion.tex}
+\subfile{sections/improvements.tex}
+
+\appendix
+
+\subfile{appendix/models.tex}
+\subfile{appendix/script_arguments.tex}
+\subfile{appendix/algorithm.tex}
+\subfile{appendix/operations.tex}
+\subfile{appendix/results.tex}
+\subfile{appendix/gce.tex}
+
+\bibliography{sections/references.bib}
+
+\end{document}

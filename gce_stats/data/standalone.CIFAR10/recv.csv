@@ -1,0 +1,26 @@
+TimeSeries ID,instance/network/received_bytes_count.gce_instance.ALIGN_RATE.REDUCE_SUM.metric.type="compute.googleapis.com/instance/network/received_bytes_count" resource.type="gce_instance" resource.labels."instance_id"="8560514575930684513" resource.labels."zone"="europe-central2-c" AND resource.labels."project_id"="ddls-aria-darmanger".60s.project_id:ddls-aria-darmanger.instance_name:instance-20240520-150404
+instance_name,instance-20240520-150404
+project_id,ddls-aria-darmanger
+Wed May 22 2024 14:15:00 GMT+0200 (Central European Summer Time),1158.3833333333334
+Wed May 22 2024 14:16:00 GMT+0200 (Central European Summer Time),1063.5666666666666
+Wed May 22 2024 14:17:00 GMT+0200 (Central European Summer Time),1166.1666666666667
+Wed May 22 2024 14:18:00 GMT+0200 (Central European Summer Time),1090.4333333333334
+Wed May 22 2024 14:19:00 GMT+0200 (Central European Summer Time),590194.8333333334
+Wed May 22 2024 14:20:00 GMT+0200 (Central European Summer Time),128578.68333333333
+Wed May 22 2024 14:21:00 GMT+0200 (Central European Summer Time),317218.93333333335
+Wed May 22 2024 14:22:00 GMT+0200 (Central European Summer Time),59404.2
+Wed May 22 2024 14:23:00 GMT+0200 (Central European Summer Time),2495485.4
+Wed May 22 2024 14:24:00 GMT+0200 (Central European Summer Time),468068.1
+Wed May 22 2024 14:25:00 GMT+0200 (Central European Summer Time),4277.816666666667
+Wed May 22 2024 14:26:00 GMT+0200 (Central European Summer Time),4337.216666666666
+Wed May 22 2024 14:27:00 GMT+0200 (Central European Summer Time),4078.116666666667
+Wed May 22 2024 14:28:00 GMT+0200 (Central European Summer Time),4314.916666666667
+Wed May 22 2024 14:29:00 GMT+0200 (Central European Summer Time),4167.016666666666
+Wed May 22 2024 14:30:00 GMT+0200 (Central European Summer Time),4090.75
+Wed May 22 2024 14:31:00 GMT+0200 (Central European Summer Time),4260.8
+Wed May 22 2024 14:32:00 GMT+0200 (Central European Summer Time),4174.583333333333
+Wed May 22 2024 14:33:00 GMT+0200 (Central European Summer Time),4278.25
+Wed May 22 2024 14:34:00 GMT+0200 (Central European Summer Time),4270.633333333333
+Wed May 22 2024 14:35:00 GMT+0200 (Central European Summer Time),2891.45
+Wed May 22 2024 14:36:00 GMT+0200 (Central European Summer Time),3556.05
+Wed May 22 2024 14:37:00 GMT+0200 (Central European Summer Time),1285.9166666666667

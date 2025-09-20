@@ -1,0 +1,55 @@
+\chapter{Discussion}
+
+\section{Network disturbance}
+Figure \ref{fig:epoch_duration_cropped} shows evident perturbations that are not the result of periodic calculations since the score computation is not taken into account in this figure, and the swapping of workers occurs at intervals of 5,000 epochs, which is also not considered. The most probable cause of these disturbance is network perturbations.
+
+Referring to our network architecture in figure \ref{fig:architecture}, we see that the instances are not located in the same datacenter, which could amplify these for potential network perturbations. Another argument supporting this hypothesis is that the standalone setting does not suffer from this problem, thereby discarding any potential local perturbations within the instance.
+
+To validate this hypothesis, we retrieved all the time-related data for the perturbed epochs and analyzed the operations on which these problematic epochs spend the most time on. For both the server and the workers, we found that these issues are indeed related to network communications.
+
+On the server side, figure \ref{fig:mean_time_elapsed_bar_server_outliers} shows that during problematic epochs, the server spends most of its time sending data to the workers. Conversely, figure \ref{fig:mean_time_elapsed_bar_workers_outliers} demonstrates that during these problematic epochs, the workers spend most of their time receiving data from the server.
+
+Therefore, we show that our implementation does not suffer from any random and unpredictable perturbations and that the bumps we see in figure \ref{fig:epoch_duration_cropped} are indeed related to network perturbations. Since we identify the source of these perturbations it becomes more relevant to discuss the results after removing these outliers which could fake the conclusions we take from our data.
+
+\figureWithCaption{mean_time_elapsed_bar_server_outliers}{Average time elapsed per operation on the server during problematic epochs}{\textwidth}{0}
+
+\figureWithCaption{mean_time_elapsed_bar_workers_outliers}{Average time elapsed per operation on the workers during problematic epochs}{\textwidth}{0}
+
+\section{Potential linear relation \#workers and epoch duration}
+Figure \ref{fig:average_time_per_epoch_relation}, which depicts the average time to complete an epoch (without outliers) in the different settings, shows that the relationship between the time of a typical epoch takes to complete and the number of workers involved is not completely linear. However, to fully assess and confirm these results, more runs should be performed on the same hardware and network configuration. It is possible that this trend is the beginning of a slowly growing exponential relationship.
+
+Figure \ref{fig:size_sent_recv_server} provides an explanation for this linear-looking relationship. As the number of workers increases, the communication size grows linearly, since communication size naturally relates to the time required to transmit data over the network. Therefore, the linearly growing communication size curve translates to the one depicting epoch duration. We also observe that the impact of world size is primarily on the server side. To reduce this network overhead, solutions such as data compression could be employed, although they introduce additional compression and decompression overhead. More experiments should be conducted to determine the time savings that could be gained by using data compression.
+
+We can confirm that within the interval from 4 to 20 workers, the relationship is almost perfectly linear, which is probably caused by the communication size which grows linearly as the number of workers grows. This could indicate that for the 40-worker setting, there is a small time-consuming factor that does not significantly affect the linear relationship at smaller world sizes. In the 40-worker setting, however, this small factor adds up and becomes significant enough to suggest a slowly growing exponential relationship.
+
+\section{Longest operations}
+Even after removing the outliers, figures \ref{fig:mean_time_elapsed_bar_server} and \ref{fig:mean_time_elapsed_bar_workers} show that the most time-consuming operations are still related to the network, rather than any kind of computation. Specifically, the most time-consuming task for the workers is receiving data from the server, while for the server, it is sending data to the workers. The second most time-consuming task for the server is receiving gradients from the workers.
+
+Figure \ref{fig:mean_time_elapsed_bar_server} and \ref{fig:mean_time_elapsed_bar_workers} shows The first non-network-related task that is the most time-consuming is aggregating the received gradients. This suggests a potential area for algorithmic optimization that could improve efficiency in that part of the process.
+
+This directly answers our second scientific question:\\
+\textit{"Does training GANs in a distributed setting slow down the time to complete an epoch compared to a standalone setting?"}\\
+Yes, it does. The number of workers in the distributed setting results in epochs with a longer duration. Thus, we confirm that our second hypothesis \textbf{H2} is true. Additionally, we determined that there is a potential "near-linear" relationship between the number of workers and the average time it takes to complete an epoch.
+
+As a side note, the time elapsed for sending and receiving data between the server and the workers does not perfectly match because the server does not wait for the workers to complete the data reception before considering the sending operation complete on its side.
+
+\section{Harder to converge for the distributed setting}
+Figures \ref{fig:fid_cropped} and \ref{fig:is_cropped} both suggest that the distributed settings do not converge as well as the standalone version. This is likely due to the fact that the aggregated gradients tend to cancel each other out when averaged, making it difficult for the model to converge to an optimal solution.
+
+To extend this analysis with a larger number of epochs, we refer to figures \ref{fig:fid} and \ref{fig:is} in the appendix. These figures display the scoring metrics more frequently and show the scores we collected beyond 5,000 epochs. They indicate that the 20-worker setting continues to provide similar values to the other distributed settings. This allows us to conclude that increasing the number of workers does not help the model converge to a better optimum faster than the standalone setting.
+
+This directly answers our first scientific question:\\
+\textit{"Does training GANs in a distributed setting helps converging to an optimal solution in fewer epochs than a standalone version?"}\\
+No, it does not. Our results show the opposite: it is harder for a distributed GAN to converge to an optimal solution. This is likely due to the fact that workers provide feedback to the server, and by averaging these feedbacks, some information is lost, thereby slowing down the convergence rate. Thus we can reject our first hypothesis \textbf{H1}.
+
+As the FID and IS metrics aim to reproduce the capabilities of the human eye, one should be able to verify this statement using figures \ref{fig:CIFAR10.standalone}, \ref{fig:CIFAR10.4}, and \ref{fig:CIFAR10.10}.
+
+
+As a side note, since the IS score is not bounded, it is difficult to define the exact point at which it indicates that the generated images are of high quality. On the other hand, an FID score close to 0 means that the generated images coincide very well with the original batch of images, indicating higher quality. For the FID score, we aim to get the lowest value possible. These metrics are primarily used for comparison with other works. For instance, the state of the art (SOTA) for GANs on CIFAR-10 can achieve an IS score around 9.00 and an FID score around 15.00 \cite{brock2019large}. However, our work does not focus on obtaining SOTA results but rather on assessing the optimization aspects that a distributed GAN can still achieve.
+
+\section{Source of idle time} \label{sec:idle}
+By analyzing the timeline figures \ref{fig:timeline_1} and \ref{fig:timeline_10} and the algorithm in \ref{appendix:algo}, we can identify the main source of idle time: the server waits until all the workers finish their training and send their feedback. This is difficult to optimize. For instance, one approach could be to use this idle time on the server side to pre-generate data for the next epoch. However, this would mean the discriminators would not be trained using the current state of the generator since the fake data would be generated before the generator takes its optimization step.
+
+Similarly, from the worker's perspective, one might think a worker could start the next epoch immediately. However, this induces the same issue: if a worker starts the next epoch without waiting for the generator to complete its optimization step, the workers and the generator will be out of sync in terms of optimization steps taken, which is likely to penalize the training process.
+
+A potential solution to minimize idle time without causing synchronization issues is to implement a timeout on the server while receiving feedback from the workers. This would mean the server waits until a specified timeout period elapses. If at least one feedback is received within this period, the server proceeds with the available feedbacks and discards all the other which arrived too late. This approach ensures that the server does not wait excessively for all workers while still maintaining synchronization with the current version of the generator. The main advantage is that it preserves a good convergence behavior while reducing idle time and improving performance.

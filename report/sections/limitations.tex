@@ -1,0 +1,18 @@
+\chapter{Limitations}
+
+\section{Scalability and computational overhead}
+While the MD-GAN framework facilitates the distribution of GAN training across multiple nodes, this approach introduces significant computational overhead. The need to synchronize discriminators and manage communication between nodes can lead to bottlenecks, particularly as the number of nodes increases. In our implementation, although deploying on Google Cloud allowed for scalability, the network latency and data transmission costs sometimes overcome the benefits of distributed processing. This reflects a common challenge in distributed systems: optimizing the trade-off between scalability and efficiency.
+
+% \section{Handling of Non-IID Data}
+% One of the fundamental challenges addressed in the original MD-GAN study and encountered in our project is the handling of Non-IID data across different nodes. Although MD-GAN is designed to mitigate issues occurring from data heterogeneity, our findings suggest that performance degradation is still notable when the data inequality among nodes is high. This limitation is critical in real-world scenarios where data distribution cannot be controlled or predicted, potentially impacting the generalizability and fairness of the model.
+
+\section{Dependency on network infrastructure}
+The performance of distributed GANs relies on the network infrastructure. Effective training requires a robust and reliable network to facilitate the frequent exchange of model parameters and discriminator states. In our experiments, variations in network quality, such as bandwidth fluctuations and connectivity issues, occasionally disrupted the training process and led to inconsistent model performance. This dependency highlights the need for a stable, controlled and monitor network environment to fully leverage the potential of distributed Deep Learning systems more generally.
+
+\section{Privacy concerns}
+Despite the distributed nature of MD-GAN offering advantages in data privacy by keeping data localized, complete privacy cannot be guaranteed. The exchange of discriminator models among nodes exposes the system to potential security vulnerabilities, such as inference attacks where sensitive information could be reconstructed. This show the need for more robust privacy-preserving mechanisms.
+
+But the most concerning type of attacks which could cancel the benefit of keeping the workers' data locally, are the gradient inversion attacks, which aims to reconstruct the clients datas from the gradients received by the server
+
+\section{Reproducibility and stability}
+Finally, both the original paper and our project experienced challenges related to the reproducibility and stability of GAN training. The adversarial nature of GANs makes them sensitive to hyperparameter settings, initialization, and random seed values. Small changes in any of these can lead to significant variations in output quality and convergence performance. This issue is even more highlighted in a distributed setting, where ensuring consistency across various training sessions becomes more complex.

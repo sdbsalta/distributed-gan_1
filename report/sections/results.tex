@@ -1,0 +1,91 @@
+\chapter{Results and experiments}
+To address our scientific questions, we conducted training experiments with various numbers of workers set at 4, 10, 20, and 40. All experiments were performed exclusively on the CIFAR-10 dataset due to time constraints, as it provides a sufficiently complex distribution to learn (refer to \ref{sec:datasets}). During each epoch, we measured the time required to perform specific operations that constitute an epoch.
+
+Due to the fact that our Google credits were running out rapidly, we had to stop the runs with 20 and 40 workers earlier than planned, as these configurations required the most time to complete an epoch. Consequently, the run with 20 workers was stopped at 10,000 epochs, and the run with 40 workers at 5,000 epochs. However, we allowed the standalone run and the distributed runs with 4 and 10 workers to complete their 30,000 epochs.
+
+This decision was also motivated by the fact that while these experiments were running, we observed that we could already derive the necessary conclusions we needed to showcase our results without extending the runs to the full 30,000 epochs. Therefore, all the figures shown below are cropped at 5,000 epochs. Full data plots are in the appendix \ref{appendix:results}.
+
+\newpage
+\section{Epoch duration}
+The figure \ref{fig:epoch_duration_cropped} shows the time it took to complete each epoch. Compared to the standalone setting, the distributed experiments exhibit unpredictable outliers. To better visualize the typical duration of an epoch, we removed these outliers and present the refined results in figure \ref{fig:epoch_duration_without_outliers_cropped}.
+
+As mentioned above, we cropped the results at 5,000 epochs to treat all settings equally. The full data plots are available in the appendix 
+\ref{appendix:results:epoch_duration}.
+\figureWithCaption{epoch_duration_cropped}{Epoch duration for all settings up to 5000 epochs}{\textwidth}{0}
+\figureWithCaption{epoch_duration_without_outliers_cropped}{Epoch duration without outliers for all settings up to 5000 epochs}{\textwidth}{0}
+
+\newpage
+\section{Communication size between the nodes}
+Figures \ref{fig:size_sent_recv_server} and \ref{fig:size_sent_recv_workers} show the average communication size between the different nodes. We can observe that the size varies on the server side since more workers mean the server will send more data over the network as the number of workers grows. Specifically, the server sends $2N$ generated batches of images and receives $N$ feedbacks in every epoch.
+
+However, on the worker side, the communication size does not vary with the number of workers used during training. This is because the workers are not aware of each other, their communication size remains constant regardless of the world size. Workers only communicate with the server and, potentially, swap with one other worker. Therefore, the number of workers does not impact the size of data sent and received by each individual worker, keeping it constant as the world size grows.
+\figureWithCaption{size_sent_recv_server}{Average communication for every epoch on the server side. Blue: data sent over the network in MB, Red: data received over the network (MB)}{\textwidth}{0}
+\figureWithCaption{size_sent_recv_workers}{Average communication for every epoch on the workers side. Blue: data sent over the network in MB, Red: data received over the network (MB)}{\textwidth}{0}
+
+\newpage
+\section{Average duration per world-size}
+The following plots might be the most important ones we provided, they directly answer our second scientific question \ref{que:b}.
+
+To simplify the time series shown above, we present figure \ref{fig:average_time_per_epoch} and \ref{fig:average_time_per_epoch_relation}, which illustrate the average time it takes to complete an epoch for each run with a specific world size. Using figure \ref{fig:average_time_per_epoch_relation}, we can identify how much the epoch duration increases as the world size grows. This helps us better understand the relationship between epoch duration and world size (linear, exponential, logarithmic, etc.).
+
+% On the other hand, figure \ref{fig:epoch_start_time_cropped} depicts, in the different settings, the time it took (y axis) for a certain amount of epochs (x axis) to complete. For instance, it took over 83 minutes (over 5,000 seconds) for the run with 40 workers to complete 5,000 epochs. This figure includes the outliers and they can be seen as disturbances in the straight line pattern it takes.
+
+We used the average calculation after removing the outliers of the time series (as for figure \ref{fig:epoch_duration_without_outliers_cropped}).
+
+% Again, we cropped the results at 5,000 epochs to treat all settings equally. The full data plots are available in the appendix \ref{appendix:results:time_epoch}.
+
+\figureWithCaption{average_time_per_epoch_relation}{Relation between average time per epoch and world size}{\textwidth}{0}
+
+\newpage
+\section{Average time elapsed per operation}
+To gain a deeper understanding of the epoch durations shown above, we split each epoch duration into the various operations done during an epoch. This segmentation allowed us to gather the average time taken per operation within an epoch. By doing so, we could identify the operations where our implementation spends the most time.
+
+This analysis also enabled us to compare the scalability of different operations as the world size increases. Specifically, we could determine which operations do not scale well with an increasing number of workers and which ones remain relatively constant in duration.
+
+The operations vary between the worker and the server, which is why the data related to the server are shown in separate plots, respectively in figures \ref{fig:mean_time_elapsed_bar_server} and \ref{fig:mean_time_elapsed_bar_workers}. Since this analysis is not relevant for the standalone setting, the plot related to it is available in the appendix \ref{appendix:results:avg_time_standalone}.
+
+\figureWithCaption{mean_time_elapsed_bar_server}{Average time elapsed per operation on the server}{0.9\textwidth}{0}
+\figureWithCaption{mean_time_elapsed_bar_workers}{Average time elapsed per operation on the workers}{0.9\textwidth}{0}
+
+\newpage
+\section{Scoring metrics}
+Figures \ref{fig:fid_cropped} and \ref{fig:is_cropped} show the FID and IS scores of the models in different settings as the number of epochs increases. These scores were computed at intervals of 300 epochs because calculating them at every epoch would significantly slow down the training and provide irrelevant time-related performance data.
+
+As with the other figures, the complete plots are available in \ref{appendix:results:score}. This plot demonstrates that the trends observed over the initial 5,000 epochs tend to continue beyond this point.
+
+\figureWithCaption{fid_cropped}{FID scores for different settings up to 5000 epochs}{\textwidth}{0}
+\figureWithCaption{is_cropped}{IS scores for different settings up to 5000 epochs}{\textwidth}{0}
+
+\newpage
+\section{Timeline}
+Figure \ref{fig:timeline_10} shows the timeline over 10 epochs selected from the beginning of the training. It depicts the operations performed by the server and each worker over time, providing better insights into which operations induce more computation time. Additionally, unlike figures \ref{fig:mean_time_elapsed_bar_server} and \ref{fig:mean_time_elapsed_bar_workers}, this figure helps to identify idle times, indicating when a node is not doing anything except for waiting.
+
+Along with the 10-epoch decomposition, we provide a zoomed-in view of one epoch in figure \ref{fig:timeline_1}. This helps to visualize the typical decomposition of operations within a single epoch in a distributed setting.
+
+This figure was created using the CIFAR-10 dataset with a 4-worker setting. We chose this configuration because such plots are computationally intensive to generate and difficult to interpret when many workers are involved. However, we believe that this figure provides sufficient insights for us to make meaningful conclusions.
+
+\newpage
+\begin{multicols}{2}
+\figureWithCaption{timeline_10}{Timeline over 10 epochs for 4 workers}{6cm}{0}
+\columnbreak
+\figureWithCaption{timeline_1}{Timeline of a single epoch for 4 workers}{6cm}{0}
+\end{multicols}
+\newpage
+
+\section{Images}
+After training our models, we extracted the resulting generator models. The figures \ref{fig:CIFAR10.standalone}, \ref{fig:CIFAR10.4}, \ref{fig:CIFAR10.10} showcase the capabilities of the models trained for 30,000 epochs for the standalone setting and for the distributed settings with 4 and 10 workers.
+
+Just below, in figure \ref{fig:CIFAR10.20} and \ref{fig:CIFAR10.40}, we extracted the generator models for the 20 workers setup after 10,000 epochs and for the 40 workers setup after 5,000 epochs.
+
+At first sight, there are hardly any noticeable differences between the models trained for 10,000 epochs and those trained for 30,000 epochs. However, after a closer look, it becomes evident that the shapes and concepts generated by the model after 30,000 epochs are much closer to the training data with real images.
+
+\begin{multicols}{3}
+\figureWithCaption{CIFAR10.standalone}{Generated images after 30,000 epochs in standalone setting}{5cm}{0}
+\figureWithCaption{CIFAR10.4}{Generated images after 30,000 epochs with 4 workers}{5cm}{0}
+\figureWithCaption{CIFAR10.10}{Generated images after 30,000 epochs with 10 workers}{5cm}{0}
+\end{multicols}
+
+\begin{multicols}{2}
+\figureWithCaption{CIFAR10.20}{Generated images after 10,000 epochs with 20 workers}{5cm}{0}
+\figureWithCaption{CIFAR10.40}{Generated images after 5,000 epochs with 40 workers}{5cm}{0}
+\end{multicols}

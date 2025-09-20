@@ -1,0 +1,28 @@
+\chapter{Operations}
+\section{Server}
+\begin{enumerate}
+    \item \texttt{generate\_data}: The server generates the $2k$ batches of $b$ images.
+    \item \texttt{send\_data}: The server send the batches to the corresponding workers, therefore sending $N$ tensors to the workers over the network (each of shape $2b$).
+    \item \texttt{recv\_data}: The server receive the feedbacks from the workers after they finished training, therefore receiving $N$ tensors to the workers over the network (each of shape $b$).
+    \item \texttt{agg\_gradients}: The server aggregates the gradients and compute $\delta_w$.
+    \item \texttt{calc\_gradients}: The server take an optimization step using the previously computed $\delta_w$.
+    \item \texttt{swap}: The server generates the swap pairs to the workers, inducing $N$ tensors to send to the workers (each containing only one integer).
+    \item \texttt{epoch\_calculation}: This operation gather all the operations listed above (1 to 6).
+    \item \texttt{start\_fid}: The FID score is computed (at interval of 300 epochs).
+    \item \texttt{start\_fid}: The IS score is computed (at interval of 300 epochs).
+    \item \texttt{epoch}: This operation gather all the operations listed above (1 to 9).
+\end{enumerate}
+
+\section{Worker}
+\begin{enumerate}
+    \item \texttt{recv\_data}: The workers receive the two batches $X^{(g)}$ and $X^{(d)}$ from the server.
+    \item \texttt{calc\_gradients}: The worker perform $L$ local epochs ($L = 1$).
+    \item \texttt{send}: The worker compute the gradients it has to send to the server and send it.
+    \item \texttt{agg\_gradients}: The server aggregates the gradients and compute $\delta_w$.
+    \item \texttt{recv\_swap\_instruction}: The eventually worker receives the swap instructions from the server.
+    \item \texttt{swap}: The server generates the swap pairs to the workers, inducing $N$ tensors to send to the workers (each containing only one integer).
+    \item \texttt{epoch\_calculation}: This operation gather all the operations listed above (1 to 6).
+    \item \texttt{start\_fid}: The FID score is computed (at interval of 300 epochs).
+    \item \texttt{start\_fid}: The IS score is computed (at interval of 300 epochs).
+    \item \texttt{epoch}: This operation gather all the operations listed above (1 to 9).
+\end{enumerate}

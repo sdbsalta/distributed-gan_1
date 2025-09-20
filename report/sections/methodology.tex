@@ -1,0 +1,90 @@
+\chapter{Methodology}
+\label{chap:methodology}
+
+\section{Distributed architectures}
+To address our scientific questions, we used the architecture and algorithm proposed by the MD-GAN paper \cite{mdgan} which used a parameter server. Other architectures using Federated Learning, such as the one described in FedGan \cite{fedgan}, involve each worker holding both a generator and a discriminator, training them during the learning phase, and periodically synchronizing to train a global generator. The advantage of the MD-GAN architecture is that it uses less computational power to train a GAN network while maintaining a relatively small memory footprint and requiring fewer computational resources per worker. This allows the GANs to scale better across distributed nodes. In contrast, FedGAN requires each worker to hold and train an additional generator, increasing the resource requirements. We evaluated that the most relevant existing solution to address our scientific question is therefore the MD-GAN.
+
+Another reason why we chose MD-GAN over FedGAN is that, as we will observe in our results, the most important aspect in our distributed setting is the network. We believe that Federated Learning is less appropriate for training a GAN because it involves larger communication sizes. In Federated Learning, the entire model must be sent over the network, not just the gradients of the current batch of data. This results in significantly more data being transmitted, which can slow down the training process.
+
+MD-GAN's proposed architecture consists of a single server holding a generator model and $N$ workers, each with their own discriminator. At the beginning of each epoch, the server sends generated images, based on the current generator, to each worker. Each worker then uses a batch of their own real images and the received data to perform $L$ local epochs. The model is evaluated on a portion of the images sent by the server at the beginning of the epoch, generating gradients (feedback) to send back to the server. Periodically, the discriminators are swapped among workers to prevent overfitting to local data without sharing any data with other workers or the server.
+
+Another reason why we chose MD-GAN over FedGAN is that (as we will observe in our results) the most important aspect in speeding up the training is the network, therefore we believe that  Federated Learning is less appriorate for training a GAN since it involves bigger communication size because we have to send the whole model over the network and not only gradients of a current batch of data.
+\figureWithCaption{mdgan}{The Multi-Discriminator GANs architecture proposed by \cite{mdgan}}{\textwidth}{0}
+
+\section{The MD-GAN algorithm}
+At the start of an epoch, the server sends $k$ generated batches. The value of $k$ was determined to be optimal when $k = \lfloor \log_2(N) \rfloor$. However, this presents a problem when $N \leq 3$, as this value would be equal to $1$. Having only one batch to choose from would force the workers to train and evaluate on the same batch of data, which would not guarantee optimal feedback.
+
+To counter this problem, we slightly modified the calculation of $k$ to enforce a minimum value of 2, as follow $k = \max(\lfloor \log_2(N) \rfloor)$. This ensures that in all epochs, every worker has a different training batch from the one they evaluate on.
+
+More formally, the server will generate $k$ batches $K = \{X^{(0)}, \dots, X^{(k)}\}$ at the beginning of every epoch, and every worker $n$ will receive the batches $X^{(g)} := X^{(n \mod k)}$ and $X^{(d)} := X^{((n+1) \mod k)}$.
+
+Once the client received $X^{(g)}$ and $X^{(d)}$ it will perform $L$ learning step on $X^{(d)}$ and batch of real images they own locally $X^{(r)}$. In our experiments $L$ is always set to 1, simulating the standard way of training a GAN in a standalone setting. After the learning iterations finished it will evaluate the loss function on $X^{(g)}$, the gradients (so called feedbacks) of that evaluation will be send to the server for aggregation, since it corresponds to the error made on every data point in $X^{(g)}$ the size of the feedbacks is the size as the batch size $b$.
+
+
+As soon as the server received all the gradients which corresponds to the error made by the generator on every $X^{(g)}$. The server will aggregate all the gradients as describe in \cite{mdgan} and perform an optimization step. To perform this aggregation we use \code{torch.autograd.grad}\footnote{\url{https://pytorch.org/docs/stable/generated/torch.autograd.grad.html\#torch-autograd-grad}} to calculate the partial derivatives of every element of $X^{(g)}$ with respect to all the weights of the current version of the generator (with the feedbacks as the vector in the vector-Jacobian product).
+
+From this algorithm we can infer the number of messages sent and received per epoch for each type of node. Server will send two batches of image, both of size $b$, to every worker $\rightarrow N$ messages. Therefore, each workers receive 1 message from the server, after training they all send back their feedbacks of size $b$ in one single message, summing up back to $N$ message for the server to receive. This process is repeated at every epoch.
+
+\section{Client swapping}
+The most challenging part is the client swapping, we choose a different strategy than the one proposed by MD-GAN \cite{mdgan}. Although their method work, we estimated that it wasn't optimal for many reason:
+\begin{enumerate}
+    \item Workers choosing other workers to swap with can cause conflict, for instance worker 1 could decide to swap with worker 2 which decide to swap with worker 1, creating a loop. This would induces to send two times the size of the discriminator for no benefits because worker 1 would end up with its initial weights as well as for worker 2.
+    \item Workers might not be considered for swapping which doesn't help prevent over-fitting.
+    \item Detecting these conflicts in a interaction graph would not be optimal because, because there is no central entity that could detect them.
+    \item $N-1$ separate threads have to be created on every worker to listen whenever one of the other workers wants to swap with the current worker. These threads holds a infinite loop waiting for an answer for another worker, which might never arrive. This leads to unclosed TCP connections, which cause instability. 
+    \item MD-GAN's swap frequency is variable and different on every worker because it depends on local variables such as the number of local epochs, the size of the real images dataset (which can differ from worker to worker) and the batch size. This enforces us to implement the different threads mentioned in 4., since the every workers should always be ready to receive the discriminator weights from another worker.
+    \item Using separate threads would enforce us to use the \code{tag} argument in \code{dist.send} and \code{dist.recv} which isn't supported on the NCCL backend\footnote{\url{https://pytorch.org/docs/stable/distributed.html\#torch.distributed.isend}}, therefore we are forced to use the GLOO backend and transmit all the tensors from the GPU to the CPU whenever we want to communicate with another node, inducing more delay.
+\end{enumerate}
+
+For all these reasons we introduced a novel swapping strategy that allows for using the NCCL backend. Instead of letting every worker decide with which other worker they should swap with, the server will generate pairs non-overlapping pairs (solve the 1st and 2nd and 3rd problem) of workers and it sends to every worker the rank of the other worker they will swap with. By non-overlapping pair we mean that a worker rank will never appear in more than one pair, for instance $\{(1, 2), (3, 4)\}$ aren't overlapping but $\{(1, 2), (2, 4)\}$ are, this will naturally prevent the 2nd problem from occurring. The swapping operation will be triggered at the same epoch for every node at a frequency defined by the \code{swap\_interval} parameter, solving the 4th, 5th and 6th problems. The only constraint this introduce is to have a even number of worker (\code{world\_size} must be odd because it takes into account the server) so every worker can find a partner to swap with.
+
+A message count analysis can be done very easily from that method:
+\begin{enumerate}
+    \item Every time a swap is triggered we introduce $N$ messages to send containing one 32bits integer (4 bytes)\\
+    Message count: $N$, bytes sent over the network: $4N$
+    \item Every worker will send the model to another worker and receive back another model, considering the size of the model being $|W|$.
+    Message count: $N$, bytes sent over the network: $|W|N$
+\end{enumerate}
+Each swap event sends $2N$ messages will transit over the network with a total size in byte of $N(4+W)$. In the MD-GAN implementation whenever all the workers have been swapped, $N$ messages count occurred because every worker sent their weights directly to another worker, without any other communication, with a total size of $N|W|$ bytes. Our method has a bigger network overhead in terms of swapping but solves numerous problems and allow for not transmitting tensor from the CPU to the GPU and vis-versa. Additionally the cost of this operation is amortized by the fact that it occurs at relatively big intervals, therefore we believe that this is not a problematic trade-off. For simplicity and to transcript our results in a more transparent way we chose to set the swapping frequency to a constant value of 5,000 epochs.
+
+The pseudo-code of the whole training phase is given in the appendix \ref{appendix:algo}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|
+>{\columncolor[HTML]{EFEFEF}}l |l|l|}
+\hline
+ & \cellcolor[HTML]{EFEFEF}\textbf{Sent} & \cellcolor[HTML]{EFEFEF}\textbf{Received} \\ \hline
+\textbf{Server sends generated data (Server to Workers)} & $2bN$ & $2b$ \\ \hline
+\textbf{Worker $n$ send feedback (Worker to Server)} & $b$ & $bN$ \\ \hline
+\textbf{Server send swap instructions (Server to Workers)} & $N$ & $1$ \\ \hline
+\textbf{Worker send discriminator (Worker to Worker)} & $|W|$ & $|W|$ \\ \hline
+\end{tabular}
+\caption{All the type of communication occurring in our training procedure, the size is the number of individual floating point number sent/received within PyTorch tensors (float64).}
+\label{tab:comm}
+\end{table}
+
+\section{Evaluation of the results}
+Evaluating generative models is challenging. The effectiveness of these models depends on the quality of data they produce, which ideally should be judged by humans. To simulate this human evaluation, researchers have developed automated methods. The Inception Score (IS) \cite{is} and the Fréchet Inception Distance (FID) \cite{fid} are two of these methods. We chose to use them as our primary metrics due to their proven effectiveness in evaluating generative models. Both metrics are commonly use to asses the performances of GANs, enabling us for direct comparison of our results with other GANs' benchmarks. This alignment ensures that our evaluations are relevant and scientifically rigorous, improving the validity of our findings within the broader research context.
+
+\subsection{Inception Score (IS)}
+One well-known method is the Inception Score (IS). This score helps assess how good the generated data is by using a pre-trained classifier called the Inception network. The Inception Score takes two things in consideration:
+\begin{enumerate}
+    \item \textbf{Confidence}: Checks if the Inception network can confidently recognize what the generated data represents, a higher confidence level indicates that the generated data closely resembles the real data categories.
+    \item \textbf{Diversity}: Evaluates whether the generated images are varied and not just copies of each other, this assesses the variety in the generated data.
+\end{enumerate}
+
+\subsection{Fréchet Inception Distance (FID)}
+Another important metric we use is the Fréchet Inception Distance (FID). This metric compares the distribution of generated data with the one from the real data. The steps involved in computing this metric are:
+
+\begin{enumerate}
+    \item \textbf{Application of the Inception Network}: Both generated and real data samples are processed through the Inception network to extract feature vectors. It assumes that the feature vectors of both the real and generated samples are distributed normally.
+    \item \textbf{Calculation of the FID}: This statistical measure calculates the distance between these two Gaussian distributions. A lower FID indicates that the generated data distribution more closely resembles the real data distribution.
+\end{enumerate}
+
+To compute these scores we used the InceptionScore\footnote{\url{https://lightning.ai/docs/torchmetrics/stable/image/inception_score.html}} and the FrechetInceptionDistance\footnote{\url{https://lightning.ai/docs/torchmetrics/stable/image/frechet_inception_distance.html}} classes provided by torchmetrics\footnote{\url{https://lightning.ai/docs/torchmetrics/stable/}}.
+
+\section{Time and communication size data collection}
+To answer our second scientific question, we collected data during training, such as the time for each operation (send data, receive feedback, perform optimization step, etc.) which compose an epoch on different type of nodes. These time metrics helps to decompose every operations performed in an epoch and therefore, identify what is the most costly action in terms of duration. In other perspective, this can also help finding the bottlenecks and where do we get the longest idle times, which allows us to find a way to optimize the distributed training procedure. Along with the time related metrics we also collected the communication size (in MB) involved in a given epoch for every node, in both direction (in/out).
+
+
