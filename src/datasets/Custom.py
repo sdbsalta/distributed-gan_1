@@ -21,10 +21,11 @@ class Partitioner(DataPartitioner):
         transform = transforms.Compose([
             transforms.Resize((SHAPE[1], SHAPE[2])),
             transforms.ToTensor(),
-            transforms.Normalize([0.5] * SHAPE[0], [0.5] * SHAPE[0])
+            transforms.Normalize([0.5]*SHAPE[0], [0.5]*SHAPE[0]),
         ])
-        self.custom_train = datasets.ImageFolder(root=self.path, transform=transform)
-        self.custom_test = self.custom_train  # no real test split
+        root = Path(self.path)
+        self.custom_train = datasets.ImageFolder(root / "train", transform=transform)
+        self.custom_test  = datasets.ImageFolder(root / "test",  transform=transform)
 
     def get_subset_from_indices(self, indices: List[int], train: bool = True) -> torch.utils.data.Subset:
         return torch.utils.data.Subset(self.custom_train, indices)
