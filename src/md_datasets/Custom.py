@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
-from datasets.DataPartitioner import DataPartitioner, _get_partition
+from md_datasets.DataPartitioner import DataPartitioner, _get_partition
 from typing import List, Tuple
 
 SHAPE: Tuple[int, int, int] = (3, 64, 64)  # adjust if needed

@@ -4,7 +4,7 @@ from typing import Tuple
 from torchvision.datasets import MNIST
 from torch.functional import F
 from torchvision import transforms
-from datasets.DataPartitioner import DataPartitioner, _get_partition
+from md_datasets.DataPartitioner import DataPartitioner, _get_partition
 from torchvision.datasets import MNIST
 from torchvision import transforms
 from typing import List, Tuple

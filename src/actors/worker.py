@@ -5,7 +5,7 @@ import torch.nn as nn
 import torch.utils.data
 from tensordict import TensorDict
 from pathlib import Path
-from datasets.DataPartitioner import DataPartitioner
+from md_datasets.DataPartitioner import DataPartitioner
 from typing import List, Dict, Any, Tuple
 import os
 import time

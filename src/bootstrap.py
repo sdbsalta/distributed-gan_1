@@ -8,7 +8,7 @@ import torch.nn as nn
 import random
 import numpy as np
 import importlib
-from datasets.DataPartitioner import DataPartitioner
+from md_datasets.DataPartitioner import DataPartitioner
 from actors import worker, server
 import torch.multiprocessing as mp
 from typing import List, Callable
