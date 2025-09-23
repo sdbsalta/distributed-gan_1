@@ -12,7 +12,7 @@ from torchmetrics.image.inception import InceptionScore
 import time
 import random
 import numpy as np
-from md_datasets.DataPartitioner import DataPartitioner
+from datasets.DataPartitioner import DataPartitioner
 import importlib
 import csv
 

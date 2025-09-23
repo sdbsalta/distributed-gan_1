@@ -1,7 +1,7 @@
 from torch import nn
 import torch
 from typing import Tuple
-from md_datasets.DataPartitioner import DataPartitioner, _get_partition
+from datasets.DataPartitioner import DataPartitioner, _get_partition
 from torchvision.datasets import CIFAR10
 from torchvision import transforms
 from typing import List, Tuple
